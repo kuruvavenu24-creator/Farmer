@@ -3,63 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Farmers - The Backbone of India</title>
+  <title>Farmers - Our Real Heroes</title>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      background: #f4f9f4;
+      font-family: Arial, sans-serif;
+      background: #f4fff4;
       color: #333;
     }
 
+    /* Header */
     header {
-      background: green;
+      background: linear-gradient(to right, darkgreen, green);
       color: white;
       text-align: center;
-      padding: 20px;
+      padding: 30px;
     }
 
+    header h1 {
+      margin: 0;
+      font-size: 40px;
+    }
+
+    header p {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    /* Section Styling */
     section {
-      padding: 30px;
+      padding: 40px 20px;
       text-align: center;
     }
 
     h2 {
       color: darkgreen;
+      font-size: 30px;
+      margin-bottom: 20px;
     }
 
+    /* Card Box */
     .card {
       background: white;
-      padding: 20px;
-      margin: 20px auto;
-      width: 80%;
-      max-width: 600px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+      padding: 25px;
+      margin: 30px auto;
+      width: 85%;
+      max-width: 750px;
+      border-radius: 15px;
+      box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.2);
     }
 
-    footer {
-      background: darkgreen;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      margin-top: 20px;
+    /* Farmer Images */
+    .card img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 15px;
+      margin-top: 15px;
+      margin-bottom: 15px;
     }
 
+    /* Two Images Side by Side */
+    .image-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .image-row img {
+      width: 45%;
+      min-width: 250px;
+    }
+
+    /* Button */
     button {
       background: green;
       color: white;
       border: none;
-      padding: 12px 20px;
-      font-size: 16px;
-      border-radius: 8px;
+      padding: 12px 25px;
+      font-size: 18px;
+      border-radius: 10px;
       cursor: pointer;
+      margin-top: 15px;
     }
 
     button:hover {
       background: darkgreen;
+    }
+
+    /* Footer */
+    footer {
+      background: darkgreen;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+      font-size: 16px;
     }
   </style>
 </head>
@@ -72,32 +112,51 @@
     <p>The backbone of our nation</p>
   </header>
 
-  <!-- Main Section -->
+  <!-- Who Are Farmers -->
   <section>
     <div class="card">
       <h2>Who Are Farmers?</h2>
+
+      <img src="https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg"
+           alt="Farmer in field">
+
       <p>
         Farmers are the people who grow crops and provide food for everyone.
         They work hard in the fields day and night to support our lives.
       </p>
     </div>
 
+    <!-- Importance Section -->
     <div class="card">
       <h2>Importance of Farmers</h2>
+
+      <div class="image-row">
+        <img src="https://images.pexels.com/photos/2382904/pexels-photo-2382904.jpeg"
+             alt="Farmers planting crops">
+
+        <img src="https://images.pexels.com/photos/2132171/pexels-photo-2132171.jpeg"
+             alt="Farmer carrying crops">
+      </div>
+
       <p>
         Without farmers, we would not have rice, vegetables, fruits, or grains.
         They play a major role in the economy and our daily survival.
       </p>
     </div>
 
+    <!-- Respect Farmers -->
     <div class="card">
       <h2>Respect Farmers</h2>
+
+      <img src="https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg"
+           alt="Happy farmers">
+
       <p>
         Farmers deserve respect, support, and appreciation for their hard work.
         Let us always value their contribution.
       </p>
 
-      <button onclick="alert('Thank You Farmers! 🌱')">
+      <button onclick="alert('🙏 Thank You Farmers! 🌱')">
         Click to Appreciate Farmers
       </button>
     </div>
