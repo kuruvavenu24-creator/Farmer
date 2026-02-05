@@ -2,117 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Farmers Website - Home</title>
-
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4fff4;
-      text-align: center;
-    }
-
-    nav {
-      background: darkgreen;
-      padding: 15px;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 20px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    header {
-      background: linear-gradient(to right, darkgreen, green);
-      color: white;
-      padding: 50px;
-    }
-
-    header h1 {
-      font-size: 45px;
-    }
-
+    body { margin:0; font-family:Arial; background:#f4fff4; text-align:center; }
+    nav { background:darkgreen; padding:15px; }
+    nav a { color:white; margin:0 15px; text-decoration:none; font-weight:bold; }
+    nav a:hover { text-decoration:underline; }
+    header { background:linear-gradient(to right,darkgreen,green); color:white; padding:50px; }
     .card {
-      background: white;
-      width: 80%;
-      margin: 30px auto;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+      background:white; width:80%; margin:30px auto; padding:25px;
+      border-radius:15px; box-shadow:0 5px 10px rgba(0,0,0,0.2);
     }
-
-    img {
-      width: 100%;
-      max-width: 500px;
-      border-radius: 15px;
-      margin-top: 15px;
-    }
-
-    iframe {
-      width: 90%;
-      max-width: 700px;
-      height: 400px;
-      border-radius: 15px;
-      margin-top: 20px;
-    }
-
-    footer {
-      background: darkgreen;
-      color: white;
-      padding: 15px;
-      margin-top: 30px;
-    }
+    img { max-width:500px; width:100%; border-radius:15px; }
+    iframe { width:90%; max-width:700px; height:400px; border-radius:15px; }
+    footer { background:darkgreen; color:white; padding:15px; }
   </style>
 </head>
 
 <body>
 
-  <!-- Navbar -->
-  <nav>
-    <a href="home.html">Home</a>
-    <a href="gallery.html">Gallery</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+<nav>
+  <a href="home.html">Home</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="lifestyle.html">Field Lifestyle</a>
+  <a href="contact.html">Contact</a>
+</nav>
 
-  <!-- Header -->
-  <header>
-    <h1>🌾 Farmers - Our Real Heroes 🌾</h1>
-    <p>The Backbone of Our Nation</p>
-  </header>
+<header>
+  <h1>🌾 Farmers – Our Real Heroes 🌾</h1>
+  <p>The Backbone of Our Nation</p>
+</header>
 
-  <!-- About Farmers -->
-  <div class="card">
-    <h2>Who Are Farmers?</h2>
-    <img src="https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg">
-    <p>
-      Farmers grow crops and provide food for everyone.
-      They work day and night to support our lives.
-    </p>
-  </div>
+<div class="card">
+  <h2>Who Are Farmers?</h2>
+  <img src="https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg">
+  <p>
+    Farmers are the backbone of our country. They grow crops, raise food,
+    and support millions of lives every day with dedication and hard work.
+  </p>
+</div>
 
-  <!-- Video Section -->
-  <div class="card">
-    <h2>🎥 Farmer Video Section</h2>
-    <p>Watch this short video about farmers and agriculture:</p>
+<div class="card">
+  <h2>🎥 Farmer Life Video</h2>
+  <iframe src="https://www.youtube.com/embed/2Z7V9V9cO2I" allowfullscreen></iframe>
+</div>
 
-    <iframe 
-      src="https://www.youtube.com/embed/2Z7V9V9cO2I"
-      title="Farmers Video"
-      allowfullscreen>
-    </iframe>
-  </div>
-
-  <footer>
-    <p>© 2026 Farmers Website | Home Page</p>
-  </footer>
+<footer>
+  <p>© 2026 Farmers Website</p>
+</footer>
 
 </body>
 </html>
