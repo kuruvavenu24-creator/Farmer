@@ -2,55 +2,218 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Farmers Website - Home</title>
+<title>Smart Agriculture Portal</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
-body { margin:0; font-family:Arial; background:#f4fff4; text-align:center; }
-nav { background:darkgreen; padding:15px; }
-nav a { color:white; margin:0 15px; text-decoration:none; font-weight:bold; }
-nav a:hover { text-decoration:underline; }
-header { background:linear-gradient(to right,darkgreen,green); color:white; padding:50px; }
-.card {
-  background:white; width:80%; margin:30px auto; padding:25px;
-  border-radius:15px; box-shadow:0 5px 10px rgba(0,0,0,0.2);
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f4fff4;
+  transition:0.4s;
 }
-img { max-width:500px; width:100%; border-radius:15px; }
-iframe { width:90%; max-width:700px; height:400px; border-radius:15px; }
-footer { background:darkgreen; color:white; padding:15px; }
+
+nav{
+  background:darkgreen;
+  padding:15px;
+  text-align:center;
+}
+
+nav a{
+  color:white;
+  margin:0 15px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+h1{
+  text-align:center;
+  color:darkgreen;
+  margin:25px;
+}
+
+.card{
+  background:white;
+  width:85%;
+  max-width:1000px;
+  margin:25px auto;
+  padding:25px;
+  border-radius:15px;
+  box-shadow:0 5px 12px rgba(0,0,0,0.2);
+}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  background:green;
+  color:white;
+  margin:5px;
+}
+
+.counter{
+  font-size:28px;
+  font-weight:bold;
+  color:green;
+}
+
+.news-item{
+  background:#f0fff0;
+  padding:15px;
+  border-radius:10px;
+  margin:10px 0;
+}
+
+select{
+  padding:8px;
+  border-radius:6px;
+}
+
+.night{
+  background:#0f172a;
+  color:white;
+}
+
+.night .card{
+  background:#1e293b;
+  color:white;
+}
+
+footer{
+  background:darkgreen;
+  color:white;
+  text-align:center;
+  padding:15px;
+}
 </style>
 </head>
 
-<body>
+<body id="page">
 
 <nav>
-  <a href="home.html">Home</a>
-  <a href="gallery.html">Gallery</a>
-  <a href="lifestyle.html">Field Lifestyle</a>
-  <a href="seasons.html">Crop Seasons</a>
-  <a href="contact.html">Contact</a>
+<a href="home.html">Home</a>
+<a href="gallery.html">Gallery</a>
+<a href="lifestyle.html">Portal</a>
+<a href="contact.html">Contact</a>
 </nav>
 
-<header>
-<h1>🌾 Farmers – Our Real Heroes 🌾</h1>
-<p>The Backbone of Our Nation</p>
-</header>
+<h1 id="title">🌾 Smart Agriculture Portal</h1>
 
-<div class="card">
-<h2>Who Are Farmers?</h2>
-<img src="https://images.pexels.com/photos/2255935/pexels-photo-2255935.jpeg">
-<p>
-Farmers grow food for the entire world. Their hard work feeds millions
-and keeps the country alive.
-</p>
+<div style="text-align:center;">
+<button onclick="toggleMode()">🌞 / 🌙</button>
+
+<select onchange="changeLang(this.value)">
+<option value="en">English</option>
+<option value="hi">Hindi</option>
+<option value="ta">Tamil</option>
+<option value="te">Telugu</option>
+</select>
 </div>
 
+<!-- Animated Statistics -->
 <div class="card">
-<h2>🎥 Farmer Life Video</h2>
-<iframe src="https://www.youtube.com/embed/2Z7V9V9cO2I" allowfullscreen></iframe>
+<h2>📊 Agriculture Statistics</h2>
+<p>Farmers: <span class="counter" data-target="100">0</span> Million+</p>
+<p>GDP Contribution: <span class="counter" data-target="18">0</span>%</p>
+<p>Milk Production Rank: <span class="counter" data-target="1">0</span> (Global)</p>
+</div>
+
+<!-- Live Weather -->
+<div class="card">
+<h2>🌦 Live Weather</h2>
+<input type="text" id="city" placeholder="Enter City">
+<button onclick="getWeather()">Check Weather</button>
+<p id="weatherResult"></p>
+</div>
+
+<!-- Real-Time News -->
+<div class="card">
+<h2>📰 Agriculture News</h2>
+<button onclick="getNews()">Load News</button>
+<div id="newsContainer"></div>
 </div>
 
 <footer>
-<p>© 2026 Farmers Website</p>
+© 2026 Smart Agriculture Portal
 </footer>
+
+<script>
+
+/* Night Mode */
+function toggleMode(){
+ document.getElementById("page").classList.toggle("night");
+}
+
+/* Animated Counters */
+const counters=document.querySelectorAll('.counter');
+counters.forEach(counter=>{
+ counter.innerText='0';
+ const update=()=>{
+   const target=+counter.getAttribute('data-target');
+   const c=+counter.innerText;
+   const inc=target/100;
+   if(c<target){
+     counter.innerText=Math.ceil(c+inc);
+     setTimeout(update,20);
+   }else{
+     counter.innerText=target;
+   }
+ };
+ update();
+});
+
+/* Weather API */
+function getWeather(){
+ const city=document.getElementById("city").value;
+ const apiKey="YOUR_OPENWEATHER_API_KEY";
+ fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+ .then(res=>res.json())
+ .then(data=>{
+   document.getElementById("weatherResult").innerHTML=
+   "Temperature: "+data.main.temp+"°C | "+data.weather[0].description;
+ })
+ .catch(()=>alert("Enter valid city"));
+}
+
+/* News API */
+function getNews(){
+ const apiKey="YOUR_NEWSAPI_KEY";
+ fetch(`https://newsapi.org/v2/everything?q=agriculture&apiKey=${apiKey}`)
+ .then(res=>res.json())
+ .then(data=>{
+   let newsHTML="";
+   data.articles.slice(0,5).forEach(article=>{
+     newsHTML+=`
+     <div class="news-item">
+       <h3>${article.title}</h3>
+       <p>${article.description || ""}</p>
+     </div>`;
+   });
+   document.getElementById("newsContainer").innerHTML=newsHTML;
+ })
+ .catch(()=>alert("News load failed"));
+}
+
+/* Multi Language */
+function changeLang(lang){
+ const title=document.getElementById("title");
+ if(lang==="hi"){
+   title.innerText="🌾 स्मार्ट कृषि पोर्टल";
+ }
+ else if(lang==="ta"){
+   title.innerText="🌾 ஸ்மார்ட் வேளாண்மை தளம்";
+ }
+ else if(lang==="te"){
+   title.innerText="🌾 స్మార్ట్ వ్యవసాయ పోర్టల్";
+ }
+ else{
+   title.innerText="🌾 Smart Agriculture Portal";
+ }
+}
+
+</script>
 
 </body>
 </html>
