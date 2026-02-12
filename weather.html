@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Agriculture Portal</title>
+<title>Ultimate Smart Agriculture Portal</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 body{
@@ -26,10 +26,6 @@ nav a{
   margin:0 15px;
   text-decoration:none;
   font-weight:bold;
-}
-
-nav a:hover{
-  text-decoration:underline;
 }
 
 h1{
@@ -56,10 +52,6 @@ button{
   background:green;
   color:white;
   margin:5px 0;
-}
-
-button:hover{
-  background:darkgreen;
 }
 
 input, select{
@@ -93,33 +85,55 @@ footer{
 
 <nav>
 <a href="#">Home</a>
-<a href="#">Gallery</a>
 <a href="#">Portal</a>
 <a href="#">Contact</a>
 </nav>
 
-<h1>🌾 Smart Agriculture Portal</h1>
+<h1>🌾 Ultimate Smart Agriculture Portal</h1>
 
 <div style="text-align:center;">
 <button onclick="toggleMode()">🌞 / 🌙 Toggle Mode</button>
 </div>
 
-<!-- Weather Section -->
+<!-- Weather -->
 <div class="card">
-<h2>📍 Auto-Detect Location Weather</h2>
+<h2>📍 Auto Weather</h2>
 <button onclick="detectWeather()">Detect My Weather</button>
 <p id="weatherResult"></p>
 </div>
 
-<!-- Crop Recommendation Section -->
+<!-- Rainfall Chart -->
 <div class="card">
-<h2>🌱 Crop Recommendation AI</h2>
+<h2>📈 Monthly Rainfall Chart</h2>
+<canvas id="rainChart"></canvas>
+</div>
+
+<!-- State Crop Suggestion -->
+<div class="card">
+<h2>🗺 State-Based Crop Suggestion</h2>
+<select id="stateSelect" onchange="stateCropSuggest()">
+<option value="">Select State</option>
+<option>Punjab</option>
+<option>Maharashtra</option>
+<option>Tamil Nadu</option>
+<option>Karnataka</option>
+<option>Uttar Pradesh</option>
+</select>
+<p id="stateCropResult" style="font-weight:bold;color:green;"></p>
+</div>
+
+<!-- Advanced AI Crop System -->
+<div class="card">
+<h2>🤖 Advanced Crop AI System</h2>
 
 <label>Temperature (°C)</label><br>
 <input type="number" id="temp"><br>
 
 <label>Humidity (%)</label><br>
 <input type="number" id="humidity"><br>
+
+<label>Rainfall (mm)</label><br>
+<input type="number" id="rainfall"><br>
 
 <label>Soil Type</label><br>
 <select id="soil">
@@ -129,82 +143,92 @@ footer{
 <option value="black">Black</option>
 </select><br>
 
-<label>Rainfall (mm)</label><br>
-<input type="number" id="rainfall"><br>
+<button onclick="advancedRecommend()">Analyze & Recommend</button>
 
-<button onclick="recommendCrop()">Recommend Crop</button>
+<p id="aiResult" style="font-weight:bold;color:green;"></p>
 
-<p id="cropResult" style="font-weight:bold; color:green;"></p>
 </div>
 
 <footer>
-© 2026 Smart Agriculture Portal | Built by Venu
+© 2026 Ultimate Smart Agriculture Portal | Built by Venu
 </footer>
 
 <script>
 
-const weatherApiKey = "YOUR_OPENWEATHER_API_KEY";
+const weatherApiKey="YOUR_OPENWEATHER_API_KEY";
 
-/* Toggle Night Mode */
+/* Night Mode */
 function toggleMode(){
-  document.getElementById("page").classList.toggle("night");
+ document.getElementById("page").classList.toggle("night");
 }
 
-/* Auto Detect Weather */
+/* Weather */
 function detectWeather(){
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(position=>{
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
+ if(navigator.geolocation){
+   navigator.geolocation.getCurrentPosition(position=>{
+     const lat=position.coords.latitude;
+     const lon=position.coords.longitude;
 
-      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`)
-      .then(res=>res.json())
-      .then(data=>{
-        document.getElementById("weatherResult").innerHTML =
-        "📍 Location: " + data.name +
-        "<br>🌡 Temperature: " + data.main.temp + "°C" +
-        "<br>☁ Condition: " + data.weather[0].description;
-      })
-      .catch(()=>{
-        document.getElementById("weatherResult").innerText = "Weather fetch failed.";
-      });
-
-    });
-  } else {
-    alert("Geolocation not supported.");
-  }
+     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`)
+     .then(res=>res.json())
+     .then(data=>{
+       document.getElementById("weatherResult").innerHTML=
+       "📍 "+data.name+
+       "<br>🌡 "+data.main.temp+"°C"+
+       "<br>☁ "+data.weather[0].description;
+     });
+   });
+ }
 }
 
-/* Crop Recommendation Logic */
-function recommendCrop(){
+/* Rainfall Chart */
+const ctx=document.getElementById('rainChart');
+new Chart(ctx,{
+ type:'bar',
+ data:{
+   labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+   datasets:[{
+     label:'Rainfall (mm)',
+     data:[20,25,40,60,80,150,300,280,200,120,60,30],
+     backgroundColor:'green'
+   }]
+ },
+});
 
-  const temp = parseFloat(document.getElementById("temp").value);
-  const humidity = parseFloat(document.getElementById("humidity").value);
-  const soil = document.getElementById("soil").value;
-  const rainfall = parseFloat(document.getElementById("rainfall").value);
+/* State Crop Suggestion */
+function stateCropSuggest(){
+ const state=document.getElementById("stateSelect").value;
+ let crop="";
+ if(state==="Punjab") crop="🌾 Wheat & Rice";
+ else if(state==="Maharashtra") crop="🌿 Cotton & Sugarcane";
+ else if(state==="Tamil Nadu") crop="🌾 Rice & Millets";
+ else if(state==="Karnataka") crop="☕ Coffee & Ragi";
+ else if(state==="Uttar Pradesh") crop="🌾 Wheat & Sugarcane";
+ document.getElementById("stateCropResult").innerText=crop;
+}
 
-  let crop = "";
+/* Advanced AI Scoring */
+function advancedRecommend(){
+ const temp=parseFloat(document.getElementById("temp").value);
+ const humidity=parseFloat(document.getElementById("humidity").value);
+ const rainfall=parseFloat(document.getElementById("rainfall").value);
+ const soil=document.getElementById("soil").value;
 
-  if(temp >= 20 && temp <= 35 && rainfall > 100 && soil === "loamy"){
-    crop = "🌾 Recommended Crop: Rice";
-  }
-  else if(temp >= 15 && temp <= 25 && soil === "clay"){
-    crop = "🌾 Recommended Crop: Wheat";
-  }
-  else if(temp >= 25 && temp <= 40 && soil === "black"){
-    crop = "🌿 Recommended Crop: Cotton";
-  }
-  else if(rainfall > 150 && humidity > 60){
-    crop = "🌱 Recommended Crop: Sugarcane";
-  }
-  else if(soil === "sandy"){
-    crop = "🌽 Recommended Crop: Millets / Groundnut";
-  }
-  else{
-    crop = "⚠ Conditions unclear. Try adjusting inputs.";
-  }
+ let score=0;
 
-  document.getElementById("cropResult").innerText = crop;
+ if(temp>=20 && temp<=35) score+=25;
+ if(humidity>=50) score+=25;
+ if(rainfall>=100) score+=25;
+ if(soil==="loamy"||soil==="black") score+=25;
+
+ let crop="";
+ if(score>=75) crop="🌾 Rice (Highly Suitable)";
+ else if(score>=50) crop="🌿 Cotton / Sugarcane";
+ else if(score>=25) crop="🌽 Millets";
+ else crop="⚠ Not Suitable Conditions";
+
+ document.getElementById("aiResult").innerText=
+ "Suitability Score: "+score+"% → "+crop;
 }
 
 </script>
