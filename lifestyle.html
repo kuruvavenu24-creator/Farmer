@@ -1,206 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Field Lifestyle</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Lifestyle</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f4fff4;
+  transition: 0.5s;
+}
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+nav {
+  background: darkgreen;
+  padding: 15px;
+  text-align: center;
+}
 
-  <style>
-    body {
-      margin:0;
-      font-family:Arial;
-      background:#f4fff4;
-      transition:0.5s;
-    }
+nav a {
+  color: white;
+  margin: 0 12px;
+  text-decoration: none;
+  font-weight: bold;
+}
 
-    nav {
-      background:darkgreen;
-      padding:15px;
-      text-align:center;
-    }
+nav a:hover { text-decoration: underline; }
 
-    nav a {
-      color:white;
-      margin:0 15px;
-      text-decoration:none;
-      font-weight:bold;
-    }
+h1 {
+  text-align: center;
+  color: darkgreen;
+  margin: 30px;
+}
 
-    nav a:hover { text-decoration:underline; }
+.card {
+  background: white;
+  width: 85%;
+  max-width: 1000px;
+  margin: 25px auto;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  transition: 0.5s;
+}
 
-    h1 {
-      text-align:center;
-      color:darkgreen;
-      margin:30px;
-    }
+h2 { color: green; }
 
-    .card {
-      background:white;
-      width:85%;
-      max-width:1000px;
-      margin:25px auto;
-      padding:25px;
-      border-radius:15px;
-      box-shadow:0 5px 10px rgba(0,0,0,0.2);
-      transition:0.5s;
-    }
+.night {
+  background: #0f172a;
+  color: white;
+}
 
-    h2 { color:green; }
+.night .card {
+  background: #1e293b;
+  color: white;
+}
 
-    ul { line-height:1.8; }
+.toggle-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 10px;
+  background: green;
+  color: white;
+  cursor: pointer;
+}
 
-    /* Night Mode */
-    .night {
-      background:#0f172a;
-      color:white;
-    }
+.states {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
 
-    .night .card {
-      background:#1e293b;
-      color:white;
-    }
+.state-btn {
+  background: #e8f5e9;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  border: 1px solid green;
+}
 
-    .toggle-btn {
-      display:block;
-      margin:20px auto;
-      padding:12px 25px;
-      border:none;
-      border-radius:10px;
-      background:green;
-      color:white;
-      cursor:pointer;
-    }
+.state-btn:hover {
+  background: green;
+  color: white;
+}
 
-    /* State Map Section */
-    .states {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-      gap:15px;
-      margin-top:20px;
-    }
+#cropInfo {
+  margin-top: 20px;
+  font-weight: bold;
+  color: darkgreen;
+}
 
-    .state-btn {
-      background:#e8f5e9;
-      padding:10px;
-      border-radius:8px;
-      cursor:pointer;
-      font-weight:bold;
-      border:1px solid green;
-    }
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
 
-    .state-btn:hover {
-      background:green;
-      color:white;
-    }
+.news-card {
+  background: #f9fff9;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
 
-    #cropInfo {
-      margin-top:20px;
-      font-weight:bold;
-      color:darkgreen;
-    }
+.news-card h3 {
+  color: green;
+  margin-top: 0;
+}
 
-    /* News Section */
-    .news-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:20px;
-      margin-top:20px;
-    }
-
-    .news-card {
-      background:#f9fff9;
-      padding:15px;
-      border-radius:12px;
-      box-shadow:0 3px 6px rgba(0,0,0,0.1);
-    }
-
-    .news-card h3 {
-      color:green;
-      margin-top:0;
-    }
-
-    footer {
-      background:darkgreen;
-      color:white;
-      padding:15px;
-      text-align:center;
-      margin-top:30px;
-    }
-  </style>
+footer {
+  background: darkgreen;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  margin-top: 30px;
+}
+</style>
 </head>
 
 <body id="page">
 
 <nav>
-  <a href="home.html">Home</a>
-  <a href="gallery.html">Gallery</a>
-  <a href="lifestyle.html">Field Lifestyle</a>
-  <a href="contact.html">Contact</a>
+<a href="home.html">Home</a>
+<a href="weather.html">Weather Portal</a>
+<a href="gallery.html">Gallery</a>
+<a href="lifestyle.html">Lifestyle</a>
+<a href="seasons.html">Seasons</a>
+<a href="contact.html">Contact</a>
 </nav>
 
-<h1>🌾 Agriculture Information Portal</h1>
+<h1>Agriculture Information Portal</h1>
 
-<button class="toggle-btn" onclick="toggleMode()">🌞 / 🌙 Toggle Mode</button>
+<button class="toggle-btn" onclick="toggleMode()">Toggle Day/Night</button>
 
-<!-- State-wise Crop Section -->
 <div class="card">
-  <h2><i class="fa-solid fa-map"></i> Indian State-Wise Major Crops</h2>
+<h2><i class="fa-solid fa-map"></i> Indian State-Wise Major Crops</h2>
 
-  <div class="states">
-    <div class="state-btn" onclick="showCrop('Punjab','Wheat, Rice')">Punjab</div>
-    <div class="state-btn" onclick="showCrop('Maharashtra','Cotton, Sugarcane')">Maharashtra</div>
-    <div class="state-btn" onclick="showCrop('Tamil Nadu','Rice, Millets')">Tamil Nadu</div>
-    <div class="state-btn" onclick="showCrop('Karnataka','Coffee, Ragi')">Karnataka</div>
-    <div class="state-btn" onclick="showCrop('Uttar Pradesh','Wheat, Sugarcane')">Uttar Pradesh</div>
-    <div class="state-btn" onclick="showCrop('West Bengal','Rice, Jute')">West Bengal</div>
-    <div class="state-btn" onclick="showCrop('Gujarat','Groundnut, Cotton')">Gujarat</div>
-    <div class="state-btn" onclick="showCrop('Andhra Pradesh','Chilli, Rice')">Andhra Pradesh</div>
-  </div>
-
-  <div id="cropInfo"></div>
+<div class="states">
+<div class="state-btn" onclick="showCrop('Punjab','Wheat, Rice')">Punjab</div>
+<div class="state-btn" onclick="showCrop('Maharashtra','Cotton, Sugarcane')">Maharashtra</div>
+<div class="state-btn" onclick="showCrop('Tamil Nadu','Rice, Millets')">Tamil Nadu</div>
+<div class="state-btn" onclick="showCrop('Karnataka','Coffee, Ragi')">Karnataka</div>
+<div class="state-btn" onclick="showCrop('Uttar Pradesh','Wheat, Sugarcane')">Uttar Pradesh</div>
+<div class="state-btn" onclick="showCrop('West Bengal','Rice, Jute')">West Bengal</div>
+<div class="state-btn" onclick="showCrop('Gujarat','Groundnut, Cotton')">Gujarat</div>
+<div class="state-btn" onclick="showCrop('Andhra Pradesh','Chilli, Rice')">Andhra Pradesh</div>
 </div>
 
-<!-- Agriculture News Section -->
+<div id="cropInfo"></div>
+</div>
+
 <div class="card">
-  <h2><i class="fa-solid fa-newspaper"></i> Latest Agriculture News</h2>
+<h2><i class="fa-solid fa-newspaper"></i> Agriculture News</h2>
 
-  <div class="news-grid">
-    <div class="news-card">
-      <h3>🌧 Monsoon Forecast Positive</h3>
-      <p>IMD predicts above-normal rainfall this year, boosting crop expectations.</p>
-    </div>
+<div class="news-grid">
+<div class="news-card">
+<h3>Monsoon Forecast Positive</h3>
+<p>IMD predicts above-normal rainfall this year, boosting crop expectations.</p>
+</div>
 
-    <div class="news-card">
-      <h3>🌱 New Organic Farming Initiative</h3>
-      <p>Government launches subsidy scheme encouraging organic agriculture.</p>
-    </div>
+<div class="news-card">
+<h3>New Organic Farming Initiative</h3>
+<p>Government launched a subsidy scheme encouraging organic agriculture.</p>
+</div>
 
-    <div class="news-card">
-      <h3>🚜 Smart Farming Technology Rising</h3>
-      <p>AI and IoT-based irrigation systems are improving productivity by 20%.</p>
-    </div>
+<div class="news-card">
+<h3>Smart Farming Technology Rising</h3>
+<p>AI and IoT-based irrigation systems are improving productivity.</p>
+</div>
 
-    <div class="news-card">
-      <h3>💧 Water Conservation Projects</h3>
-      <p>New irrigation projects aim to support drought-prone regions.</p>
-    </div>
-  </div>
+<div class="news-card">
+<h3>Water Conservation Projects</h3>
+<p>New irrigation projects aim to support drought-prone regions.</p>
+</div>
+</div>
 </div>
 
 <footer>
-  <p>© 2026 Farmers Agriculture Portal</p>
+<p>&copy; 2026 Farmers Agriculture Portal</p>
 </footer>
 
 <script>
-function toggleMode(){
+function toggleMode() {
   document.getElementById("page").classList.toggle("night");
 }
 
-function showCrop(state, crops){
+function showCrop(state, crops) {
   document.getElementById("cropInfo").innerHTML =
-    "🌾 Major crops grown in <b>" + state + "</b>: " + crops;
+    "Major crops grown in <b>" + state + "</b>: " + crops;
 }
 </script>
 

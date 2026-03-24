@@ -4,79 +4,77 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ultimate Smart Agriculture Portal</title>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f4fff4;
-  transition:0.4s;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4fff4;
+  transition: 0.4s;
 }
 
-nav{
-  background:darkgreen;
-  padding:15px;
-  text-align:center;
+nav {
+  background: darkgreen;
+  padding: 15px;
+  text-align: center;
 }
 
-nav a{
-  color:white;
-  margin:0 15px;
-  text-decoration:none;
-  font-weight:bold;
+nav a {
+  color: white;
+  margin: 0 12px;
+  text-decoration: none;
+  font-weight: bold;
 }
 
-h1{
-  text-align:center;
-  color:darkgreen;
-  margin:25px;
+h1 {
+  text-align: center;
+  color: darkgreen;
+  margin: 25px;
 }
 
-.card{
-  background:white;
-  width:85%;
-  max-width:1000px;
-  margin:25px auto;
-  padding:25px;
-  border-radius:15px;
-  box-shadow:0 5px 12px rgba(0,0,0,0.2);
+.card {
+  background: white;
+  width: 85%;
+  max-width: 1000px;
+  margin: 25px auto;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
 }
 
-button{
-  padding:10px 20px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  background:green;
-  color:white;
-  margin:5px 0;
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: green;
+  color: white;
+  margin: 5px 0;
 }
 
-input, select{
-  padding:8px;
-  border-radius:6px;
-  margin:5px 0;
-  width:200px;
+input, select {
+  padding: 8px;
+  border-radius: 6px;
+  margin: 5px 0;
+  width: 200px;
 }
 
-.night{
-  background:#0f172a;
-  color:white;
+.night {
+  background: #0f172a;
+  color: white;
 }
 
-.night .card{
-  background:#1e293b;
-  color:white;
+.night .card {
+  background: #1e293b;
+  color: white;
 }
 
-footer{
-  background:darkgreen;
-  color:white;
-  text-align:center;
-  padding:15px;
-  margin-top:30px;
+footer {
+  background: darkgreen;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  margin-top: 30px;
 }
 </style>
 </head>
@@ -84,33 +82,33 @@ footer{
 <body id="page">
 
 <nav>
-<a href="#">Home</a>
-<a href="#">Portal</a>
-<a href="#">Contact</a>
+<a href="home.html">Home</a>
+<a href="weather.html">Weather Portal</a>
+<a href="gallery.html">Gallery</a>
+<a href="lifestyle.html">Lifestyle</a>
+<a href="seasons.html">Seasons</a>
+<a href="contact.html">Contact</a>
 </nav>
 
-<h1>🌾 Ultimate Smart Agriculture Portal</h1>
+<h1>Ultimate Smart Agriculture Portal</h1>
 
 <div style="text-align:center;">
-<button onclick="toggleMode()">🌞 / 🌙 Toggle Mode</button>
+<button onclick="toggleMode()">Toggle Day/Night</button>
 </div>
 
-<!-- Weather -->
 <div class="card">
-<h2>📍 Auto Weather</h2>
+<h2>Auto Weather</h2>
 <button onclick="detectWeather()">Detect My Weather</button>
 <p id="weatherResult"></p>
 </div>
 
-<!-- Rainfall Chart -->
 <div class="card">
-<h2>📈 Monthly Rainfall Chart</h2>
+<h2>Monthly Rainfall Chart</h2>
 <canvas id="rainChart"></canvas>
 </div>
 
-<!-- State Crop Suggestion -->
 <div class="card">
-<h2>🗺 State-Based Crop Suggestion</h2>
+<h2>State-Based Crop Suggestion</h2>
 <select id="stateSelect" onchange="stateCropSuggest()">
 <option value="">Select State</option>
 <option>Punjab</option>
@@ -122,11 +120,10 @@ footer{
 <p id="stateCropResult" style="font-weight:bold;color:green;"></p>
 </div>
 
-<!-- Advanced AI Crop System -->
 <div class="card">
-<h2>🤖 Advanced Crop AI System</h2>
+<h2>Advanced Crop AI System</h2>
 
-<label>Temperature (°C)</label><br>
+<label>Temperature (C)</label><br>
 <input type="number" id="temp"><br>
 
 <label>Humidity (%)</label><br>
@@ -143,94 +140,111 @@ footer{
 <option value="black">Black</option>
 </select><br>
 
-<button onclick="advancedRecommend()">Analyze & Recommend</button>
+<button onclick="advancedRecommend()">Analyze and Recommend</button>
 
 <p id="aiResult" style="font-weight:bold;color:green;"></p>
 
 </div>
 
 <footer>
-© 2026 Ultimate Smart Agriculture Portal | Built by Venu
+&copy; 2026 Ultimate Smart Agriculture Portal | Built by Venu
 </footer>
 
 <script>
+const weatherApiKey = "YOUR_OPENWEATHER_API_KEY";
 
-const weatherApiKey="YOUR_OPENWEATHER_API_KEY";
-
-/* Night Mode */
-function toggleMode(){
- document.getElementById("page").classList.toggle("night");
+function toggleMode() {
+  document.getElementById("page").classList.toggle("night");
 }
 
-/* Weather */
-function detectWeather(){
- if(navigator.geolocation){
-   navigator.geolocation.getCurrentPosition(position=>{
-     const lat=position.coords.latitude;
-     const lon=position.coords.longitude;
+function detectWeather() {
+  const target = document.getElementById("weatherResult");
 
-     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`)
-     .then(res=>res.json())
-     .then(data=>{
-       document.getElementById("weatherResult").innerHTML=
-       "📍 "+data.name+
-       "<br>🌡 "+data.main.temp+"°C"+
-       "<br>☁ "+data.weather[0].description;
-     });
-   });
- }
+  if (!navigator.geolocation) {
+    target.innerText = "Geolocation not supported by this browser.";
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      fetch("https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + weatherApiKey + "&units=metric")
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.main || !data.weather || !data.weather[0]) {
+            target.innerText = "Weather unavailable. Add a valid OpenWeather API key.";
+            return;
+          }
+
+          target.innerHTML =
+            "Location: " + data.name +
+            "<br>Temperature: " + data.main.temp + " C" +
+            "<br>Condition: " + data.weather[0].description;
+        })
+        .catch(() => {
+          target.innerText = "Failed to fetch weather details.";
+        });
+    },
+    () => {
+      target.innerText = "Location permission denied.";
+    }
+  );
 }
 
-/* Rainfall Chart */
-const ctx=document.getElementById('rainChart');
-new Chart(ctx,{
- type:'bar',
- data:{
-   labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-   datasets:[{
-     label:'Rainfall (mm)',
-     data:[20,25,40,60,80,150,300,280,200,120,60,30],
-     backgroundColor:'green'
-   }]
- },
+const ctx = document.getElementById("rainChart");
+new Chart(ctx, {
+  type: "bar",
+  data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [{
+      label: "Rainfall (mm)",
+      data: [20, 25, 40, 60, 80, 150, 300, 280, 200, 120, 60, 30],
+      backgroundColor: "green"
+    }]
+  }
 });
 
-/* State Crop Suggestion */
-function stateCropSuggest(){
- const state=document.getElementById("stateSelect").value;
- let crop="";
- if(state==="Punjab") crop="🌾 Wheat & Rice";
- else if(state==="Maharashtra") crop="🌿 Cotton & Sugarcane";
- else if(state==="Tamil Nadu") crop="🌾 Rice & Millets";
- else if(state==="Karnataka") crop="☕ Coffee & Ragi";
- else if(state==="Uttar Pradesh") crop="🌾 Wheat & Sugarcane";
- document.getElementById("stateCropResult").innerText=crop;
+function stateCropSuggest() {
+  const state = document.getElementById("stateSelect").value;
+  let crop = "";
+
+  if (state === "Punjab") crop = "Wheat and Rice";
+  else if (state === "Maharashtra") crop = "Cotton and Sugarcane";
+  else if (state === "Tamil Nadu") crop = "Rice and Millets";
+  else if (state === "Karnataka") crop = "Coffee and Ragi";
+  else if (state === "Uttar Pradesh") crop = "Wheat and Sugarcane";
+
+  document.getElementById("stateCropResult").innerText = crop;
 }
 
-/* Advanced AI Scoring */
-function advancedRecommend(){
- const temp=parseFloat(document.getElementById("temp").value);
- const humidity=parseFloat(document.getElementById("humidity").value);
- const rainfall=parseFloat(document.getElementById("rainfall").value);
- const soil=document.getElementById("soil").value;
+function advancedRecommend() {
+  const temp = parseFloat(document.getElementById("temp").value);
+  const humidity = parseFloat(document.getElementById("humidity").value);
+  const rainfall = parseFloat(document.getElementById("rainfall").value);
+  const soil = document.getElementById("soil").value;
 
- let score=0;
+  if (Number.isNaN(temp) || Number.isNaN(humidity) || Number.isNaN(rainfall)) {
+    document.getElementById("aiResult").innerText = "Enter temperature, humidity, and rainfall values.";
+    return;
+  }
 
- if(temp>=20 && temp<=35) score+=25;
- if(humidity>=50) score+=25;
- if(rainfall>=100) score+=25;
- if(soil==="loamy"||soil==="black") score+=25;
+  let score = 0;
 
- let crop="";
- if(score>=75) crop="🌾 Rice (Highly Suitable)";
- else if(score>=50) crop="🌿 Cotton / Sugarcane";
- else if(score>=25) crop="🌽 Millets";
- else crop="⚠ Not Suitable Conditions";
+  if (temp >= 20 && temp <= 35) score += 25;
+  if (humidity >= 50) score += 25;
+  if (rainfall >= 100) score += 25;
+  if (soil === "loamy" || soil === "black") score += 25;
 
- document.getElementById("aiResult").innerText=
- "Suitability Score: "+score+"% → "+crop;
+  let crop = "Not Suitable Conditions";
+  if (score >= 75) crop = "Rice (Highly Suitable)";
+  else if (score >= 50) crop = "Cotton / Sugarcane";
+  else if (score >= 25) crop = "Millets";
+
+  document.getElementById("aiResult").innerText =
+    "Suitability Score: " + score + "% -> " + crop;
 }
-
 </script>
 
 </body>

@@ -2,23 +2,28 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gallery</title>
 <style>
-body { margin:0; font-family:Arial; background:#f4fff4; text-align:center; }
-nav { background:darkgreen; padding:15px; }
-nav a { color:white; margin:0 15px; text-decoration:none; font-weight:bold; }
-nav a:hover { text-decoration:underline; }
-h1 { color:darkgreen; margin:30px; }
+body { margin: 0; font-family: Arial; background: #f4fff4; text-align: center; }
+nav { background: darkgreen; padding: 15px; }
+nav a { color: white; margin: 0 12px; text-decoration: none; font-weight: bold; }
+nav a:hover { text-decoration: underline; }
+h1 { color: darkgreen; margin: 30px; }
 .gallery {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px; padding:20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
 .gallery img {
-  width:100%; height:200px; object-fit:cover;
-  border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,0.2);
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-footer { background:darkgreen; color:white; padding:15px; }
+footer { background: darkgreen; color: white; padding: 15px; }
 </style>
 </head>
 
@@ -26,23 +31,24 @@ footer { background:darkgreen; color:white; padding:15px; }
 
 <nav>
 <a href="home.html">Home</a>
+<a href="weather.html">Weather Portal</a>
 <a href="gallery.html">Gallery</a>
-<a href="lifestyle.html">Field Lifestyle</a>
-<a href="seasons.html">Crop Seasons</a>
+<a href="lifestyle.html">Lifestyle</a>
+<a href="seasons.html">Seasons</a>
 <a href="contact.html">Contact</a>
 </nav>
 
-<h1>🌱 Farmer Gallery</h1>
+<h1>Farmer Gallery</h1>
 
 <div class="gallery">
-<img src="https://images.pexels.com/photos/1458694/pexels-photo-1458694.jpeg">
-<img src="https://images.pexels.com/photos/259280/pexels-photo-259280.jpeg">
-<img src="https://images.pexels.com/photos/2382681/pexels-photo-2382681.jpeg">
-<img src="https://images.pexels.com/photos/2255801/pexels-photo-2255801.jpeg">
+<img src="https://images.pexels.com/photos/1458694/pexels-photo-1458694.jpeg" alt="Farmland with crops">
+<img src="https://images.pexels.com/photos/259280/pexels-photo-259280.jpeg" alt="Farmer working in field">
+<img src="https://images.pexels.com/photos/2382681/pexels-photo-2382681.jpeg" alt="Agriculture close-up">
+<img src="https://images.pexels.com/photos/2255801/pexels-photo-2255801.jpeg" alt="Harvest scene">
 </div>
 
 <footer>
-<p>© 2026 Farmers Website</p>
+<p>&copy; 2026 Farmers Website</p>
 </footer>
 
 </body>
