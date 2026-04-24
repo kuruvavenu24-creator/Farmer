@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yield Prediction - Smart Agriculture AI</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+  margin: 0;
+  font-family: Segoe UI, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: white;
+}
+
+nav {
+  background: #111;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+nav h1 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+nav ul {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+nav a:hover {
+  color: #00c6ff;
+}
+
+.section {
+  padding: 40px 8%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  background: #1e2a38;
+  padding: 22px;
+  border-radius: 14px;
+  margin: 18px 0;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.45);
+}
+
+input, button {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: none;
+  font-family: inherit;
+}
+
+button {
+  background: #00c6ff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0072ff;
+}
+
+.helper {
+  color: #d8e9f7;
+  line-height: 1.7;
+}
+
+footer {
+  background: #111;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<h1>Smart Agriculture AI</h1>
+<ul>
+<li><a href="home.html">Home</a></li>
+<li><a href="weather.html">Weather</a></li>
+<li><a href="map-tools.html">Map</a></li>
+<li><a href="crop-tools.html">Crop</a></li>
+<li><a href="yield-prediction.html">Yield</a></li>
+<li><a href="history-export.html">History</a></li>
+<li><a href="gallery.html">Gallery</a></li>
+<li><a href="lifestyle.html">Lifestyle</a></li>
+<li><a href="seasons.html">Seasons</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</nav>
+
+<div class="section">
+  <div class="card">
+    <h2>Yield Prediction</h2>
+    <p class="helper">
+      This page is only for yield estimation. Enter the basic field input values below and the tool will estimate total
+      production with a simple chart.
+    </p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <input type="number" id="land" placeholder="Land Area (acres)">
+      <input type="number" id="fertilizer" placeholder="Fertilizer (kg)">
+      <input type="number" id="water" placeholder="Water (litres)">
+      <button onclick="predictYield()">Calculate Yield</button>
+      <h3 id="yieldResult"></h3>
+      <p id="yieldAdvice"></p>
+    </div>
+
+    <div class="card">
+      <canvas id="yieldChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<footer>
+&copy; 2026 Smart Agriculture AI | Yield Prediction
+</footer>
+
+<script>
+let db;
+let yieldChart;
+
+function initDB() {
+  const request = indexedDB.open("agriAI", 1);
+  request.onupgradeneeded = (event) => {
+    const database = event.target.result;
+    const store = database.createObjectStore("records", { keyPath: "id", autoIncrement: true });
+    store.createIndex("type", "type", { unique: false });
+    store.createIndex("createdAt", "createdAt", { unique: false });
+  };
+  request.onsuccess = (event) => {
+    db = event.target.result;
+  };
+}
+
+function saveRecord(type, input, result) {
+  if (!db) return;
+  const tx = db.transaction(["records"], "readwrite");
+  tx.objectStore("records").add({ type, input, result, createdAt: new Date().toISOString() });
+}
+
+function predictYield() {
+  const land = parseFloat(document.getElementById("land").value);
+  const fertilizer = parseFloat(document.getElementById("fertilizer").value);
+  const water = parseFloat(document.getElementById("water").value);
+
+  if (Number.isNaN(land) || Number.isNaN(fertilizer) || Number.isNaN(water)) {
+    document.getElementById("yieldResult").innerText = "Enter land, fertilizer, and water values.";
+    document.getElementById("yieldAdvice").innerText = "";
+    return;
+  }
+
+  const result = (land * 500) + (fertilizer * 2) + (water * 0.05);
+  const perAcre = result / land;
+  let advice = "Yield level is moderate.";
+
+  if (perAcre > 650) {
+    advice = "This looks like a strong output per acre.";
+  } else if (perAcre < 450) {
+    advice = "Yield looks low. Review irrigation and nutrient support.";
+  }
+
+  document.getElementById("yieldResult").innerText = "Estimated Yield: " + result.toFixed(2) + " kg";
+  document.getElementById("yieldAdvice").innerText = "Per acre: " + perAcre.toFixed(2) + " kg. " + advice;
+
+  if (yieldChart) {
+    yieldChart.destroy();
+  }
+
+  yieldChart = new Chart(document.getElementById("yieldChart"), {
+    type: "bar",
+    data: {
+      labels: ["Estimated Yield"],
+      datasets: [{
+        label: "Yield (kg)",
+        data: [result],
+        backgroundColor: "#00c6ff"
+      }]
+    }
+  });
+
+  saveRecord("yield", { land, fertilizer, water }, { yieldKg: result, perAcre });
+}
+
+initDB();
+</script>
+
+</body>
+</html>

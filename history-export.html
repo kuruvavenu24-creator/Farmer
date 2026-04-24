@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History and Export - Smart Agriculture AI</title>
+<style>
+body {
+  margin: 0;
+  font-family: Segoe UI, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: white;
+}
+
+nav {
+  background: #111;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+nav h1 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+nav ul {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+nav a:hover {
+  color: #00c6ff;
+}
+
+.section {
+  padding: 40px 8%;
+}
+
+.card {
+  background: #1e2a38;
+  padding: 22px;
+  border-radius: 14px;
+  margin: 18px 0;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.45);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+select, button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-family: inherit;
+}
+
+button {
+  background: #00c6ff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0072ff;
+}
+
+.history-item {
+  border-bottom: 1px solid #2f4258;
+  padding: 12px 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 10px;
+  background: #00c6ff33;
+  color: #c8f1ff;
+  margin-right: 8px;
+}
+
+.helper {
+  color: #d8e9f7;
+  line-height: 1.7;
+}
+
+footer {
+  background: #111;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<h1>Smart Agriculture AI</h1>
+<ul>
+<li><a href="home.html">Home</a></li>
+<li><a href="weather.html">Weather</a></li>
+<li><a href="map-tools.html">Map</a></li>
+<li><a href="crop-tools.html">Crop</a></li>
+<li><a href="yield-prediction.html">Yield</a></li>
+<li><a href="history-export.html">History</a></li>
+<li><a href="gallery.html">Gallery</a></li>
+<li><a href="lifestyle.html">Lifestyle</a></li>
+<li><a href="seasons.html">Seasons</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</nav>
+
+<div class="section">
+  <div class="card">
+    <h2>History and Export</h2>
+    <p class="helper">
+      Records saved from the weather, crop, and yield pages appear here. You can filter the list and export the current
+      selection as a CSV file.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <select id="historyFilter" onchange="loadRecords()">
+        <option value="all">All</option>
+        <option value="weather">Weather</option>
+        <option value="crop">Crop</option>
+        <option value="yield">Yield</option>
+      </select>
+      <button onclick="exportCsv()">Export CSV</button>
+    </div>
+    <p id="historySummary"></p>
+    <div id="historyList"></div>
+  </div>
+</div>
+
+<footer>
+&copy; 2026 Smart Agriculture AI | History and Export
+</footer>
+
+<script>
+let db;
+
+function initDB() {
+  const request = indexedDB.open("agriAI", 1);
+  request.onupgradeneeded = (event) => {
+    const database = event.target.result;
+    const store = database.createObjectStore("records", { keyPath: "id", autoIncrement: true });
+    store.createIndex("type", "type", { unique: false });
+    store.createIndex("createdAt", "createdAt", { unique: false });
+  };
+  request.onsuccess = (event) => {
+    db = event.target.result;
+    loadRecords();
+  };
+}
+
+function loadRecords() {
+  if (!db) return;
+  const filter = document.getElementById("historyFilter").value;
+  const tx = db.transaction(["records"], "readonly");
+  const store = tx.objectStore("records");
+  const request = store.getAll();
+
+  request.onsuccess = () => {
+    const items = request.result
+      .filter((record) => filter === "all" ? true : record.type === filter)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    document.getElementById("historySummary").innerText = "Total records: " + items.length;
+    renderHistory(items);
+  };
+}
+
+function renderHistory(items) {
+  const container = document.getElementById("historyList");
+
+  if (!items.length) {
+    container.innerHTML = "<p>No records saved yet.</p>";
+    return;
+  }
+
+  container.innerHTML = items.map((item) => `
+    <div class="history-item">
+      <div><span class="badge">${item.type}</span>${new Date(item.createdAt).toLocaleString()}</div>
+      <div>Input: ${JSON.stringify(item.input)}</div>
+      <div>Result: ${JSON.stringify(item.result)}</div>
+    </div>
+  `).join("");
+}
+
+function exportCsv() {
+  if (!db) return;
+  const filter = document.getElementById("historyFilter").value;
+  const tx = db.transaction(["records"], "readonly");
+  tx.objectStore("records").getAll().onsuccess = (event) => {
+    const rows = ["type,createdAt,input,result"];
+    event.target.result
+      .filter((record) => filter === "all" ? true : record.type === filter)
+      .forEach((record) => {
+        rows.push([
+          record.type,
+          record.createdAt,
+          JSON.stringify(record.input).replaceAll(",", ";"),
+          JSON.stringify(record.result).replaceAll(",", ";")
+        ].join(","));
+      });
+
+    const blob = new Blob([rows.join("\n")], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "agri-history.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+}
+
+initDB();
+</script>
+
+</body>
+</html>

@@ -69,6 +69,32 @@ input, select {
   color: white;
 }
 
+.weather-report {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.weather-stat {
+  background: #eef8ee;
+  border: 1px solid #d0e6d0;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.weather-stat strong {
+  display: block;
+  color: darkgreen;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+}
+
+.night .weather-stat {
+  background: #162334;
+  border-color: #2c425e;
+}
+
 footer {
   background: darkgreen;
   color: white;
@@ -84,6 +110,10 @@ footer {
 <nav>
 <a href="home.html">Home</a>
 <a href="weather.html">Weather Portal</a>
+<a href="map-tools.html">Map Tools</a>
+<a href="crop-tools.html">Crop Tools</a>
+<a href="yield-prediction.html">Yield</a>
+<a href="history-export.html">History</a>
 <a href="gallery.html">Gallery</a>
 <a href="lifestyle.html">Lifestyle</a>
 <a href="seasons.html">Seasons</a>
@@ -100,50 +130,29 @@ footer {
 <h2>Auto Weather</h2>
 <button onclick="detectWeather()">Detect My Weather</button>
 <p id="weatherResult"></p>
+<div class="weather-report" id="weatherReport" hidden>
+<div class="weather-stat">
+<strong>Temperature</strong>
+<span id="weatherTemp">--</span>
+</div>
+<div class="weather-stat">
+<strong>Feels Like</strong>
+<span id="weatherFeelsLike">--</span>
+</div>
+<div class="weather-stat">
+<strong>Humidity</strong>
+<span id="weatherHumidity">--</span>
+</div>
+<div class="weather-stat">
+<strong>Wind</strong>
+<span id="weatherWind">--</span>
+</div>
+</div>
 </div>
 
 <div class="card">
 <h2>Monthly Rainfall Chart</h2>
 <canvas id="rainChart"></canvas>
-</div>
-
-<div class="card">
-<h2>State-Based Crop Suggestion</h2>
-<select id="stateSelect" onchange="stateCropSuggest()">
-<option value="">Select State</option>
-<option>Punjab</option>
-<option>Maharashtra</option>
-<option>Tamil Nadu</option>
-<option>Karnataka</option>
-<option>Uttar Pradesh</option>
-</select>
-<p id="stateCropResult" style="font-weight:bold;color:green;"></p>
-</div>
-
-<div class="card">
-<h2>Advanced Crop AI System</h2>
-
-<label>Temperature (C)</label><br>
-<input type="number" id="temp"><br>
-
-<label>Humidity (%)</label><br>
-<input type="number" id="humidity"><br>
-
-<label>Rainfall (mm)</label><br>
-<input type="number" id="rainfall"><br>
-
-<label>Soil Type</label><br>
-<select id="soil">
-<option value="clay">Clay</option>
-<option value="loamy">Loamy</option>
-<option value="sandy">Sandy</option>
-<option value="black">Black</option>
-</select><br>
-
-<button onclick="advancedRecommend()">Analyze and Recommend</button>
-
-<p id="aiResult" style="font-weight:bold;color:green;"></p>
-
 </div>
 
 <footer>
@@ -152,6 +161,26 @@ footer {
 
 <script>
 const weatherApiKey = "YOUR_OPENWEATHER_API_KEY";
+let db;
+
+function initDB() {
+  const request = indexedDB.open("agriAI", 1);
+  request.onupgradeneeded = (event) => {
+    const database = event.target.result;
+    const store = database.createObjectStore("records", { keyPath: "id", autoIncrement: true });
+    store.createIndex("type", "type", { unique: false });
+    store.createIndex("createdAt", "createdAt", { unique: false });
+  };
+  request.onsuccess = (event) => {
+    db = event.target.result;
+  };
+}
+
+function saveRecord(type, input, result) {
+  if (!db) return;
+  const tx = db.transaction(["records"], "readwrite");
+  tx.objectStore("records").add({ type, input, result, createdAt: new Date().toISOString() });
+}
 
 function toggleMode() {
   document.getElementById("page").classList.toggle("night");
@@ -162,6 +191,7 @@ function detectWeather() {
 
   if (!navigator.geolocation) {
     target.innerText = "Geolocation not supported by this browser.";
+    clearWeatherReport();
     return;
   }
 
@@ -175,22 +205,50 @@ function detectWeather() {
         .then((data) => {
           if (!data.main || !data.weather || !data.weather[0]) {
             target.innerText = "Weather unavailable. Add a valid OpenWeather API key.";
+            clearWeatherReport();
             return;
           }
 
           target.innerHTML =
             "Location: " + data.name +
-            "<br>Temperature: " + data.main.temp + " C" +
+            "<br>Temperature: " + data.main.temp.toFixed(1) + " C" +
             "<br>Condition: " + data.weather[0].description;
+          renderWeatherReport(data);
+          saveRecord("weather", { lat, lon }, {
+            location: data.name,
+            temp: data.main.temp,
+            feelsLike: data.main.feels_like,
+            humidity: data.main.humidity,
+            wind: data.wind?.speed ?? 0,
+            desc: data.weather[0].description
+          });
         })
         .catch(() => {
           target.innerText = "Failed to fetch weather details.";
+          clearWeatherReport();
         });
     },
     () => {
       target.innerText = "Location permission denied.";
+      clearWeatherReport();
     }
   );
+}
+
+function renderWeatherReport(data) {
+  document.getElementById("weatherReport").hidden = false;
+  document.getElementById("weatherTemp").innerText = data.main.temp.toFixed(1) + " C";
+  document.getElementById("weatherFeelsLike").innerText = data.main.feels_like.toFixed(1) + " C";
+  document.getElementById("weatherHumidity").innerText = data.main.humidity + "%";
+  document.getElementById("weatherWind").innerText = (data.wind?.speed ?? 0).toFixed(1) + " m/s";
+}
+
+function clearWeatherReport() {
+  document.getElementById("weatherReport").hidden = true;
+  document.getElementById("weatherTemp").innerText = "--";
+  document.getElementById("weatherFeelsLike").innerText = "--";
+  document.getElementById("weatherHumidity").innerText = "--";
+  document.getElementById("weatherWind").innerText = "--";
 }
 
 const ctx = document.getElementById("rainChart");
@@ -206,45 +264,7 @@ new Chart(ctx, {
   }
 });
 
-function stateCropSuggest() {
-  const state = document.getElementById("stateSelect").value;
-  let crop = "";
-
-  if (state === "Punjab") crop = "Wheat and Rice";
-  else if (state === "Maharashtra") crop = "Cotton and Sugarcane";
-  else if (state === "Tamil Nadu") crop = "Rice and Millets";
-  else if (state === "Karnataka") crop = "Coffee and Ragi";
-  else if (state === "Uttar Pradesh") crop = "Wheat and Sugarcane";
-
-  document.getElementById("stateCropResult").innerText = crop;
-}
-
-function advancedRecommend() {
-  const temp = parseFloat(document.getElementById("temp").value);
-  const humidity = parseFloat(document.getElementById("humidity").value);
-  const rainfall = parseFloat(document.getElementById("rainfall").value);
-  const soil = document.getElementById("soil").value;
-
-  if (Number.isNaN(temp) || Number.isNaN(humidity) || Number.isNaN(rainfall)) {
-    document.getElementById("aiResult").innerText = "Enter temperature, humidity, and rainfall values.";
-    return;
-  }
-
-  let score = 0;
-
-  if (temp >= 20 && temp <= 35) score += 25;
-  if (humidity >= 50) score += 25;
-  if (rainfall >= 100) score += 25;
-  if (soil === "loamy" || soil === "black") score += 25;
-
-  let crop = "Not Suitable Conditions";
-  if (score >= 75) crop = "Rice (Highly Suitable)";
-  else if (score >= 50) crop = "Cotton / Sugarcane";
-  else if (score >= 25) crop = "Millets";
-
-  document.getElementById("aiResult").innerText =
-    "Suitability Score: " + score + "% -> " + crop;
-}
+initDB();
 </script>
 
 </body>
